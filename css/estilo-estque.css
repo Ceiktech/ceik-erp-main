@@ -1,0 +1,79 @@
+:root {
+    --primary-color: #2c3e50,    /* Azul Corporativo */
+    --accent-color: #3498db,     /* Azul Destaque */
+    --success-color: #27ae60,    /* Verde para entrada/estoque positivo */
+    --danger-color: #e74c3c,     /* Vermelho para alertas/baixo estoque */
+    --bg-light: #f8f9fc,
+    --sidebar-dark: #1a252f;
+}
+
+body {
+    background-color: var(--bg-light) !important;
+    font-family: 'Inter', -apple-system, sans-serif !important;
+}
+
+
+.sb-topnav.navbar {
+    background-color: white !important;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05) !important;
+    border-bottom: 1px solid #e3e6f0 !important;
+}
+
+.navbar-brand {
+    color: var(--primary-color) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px;
+}
+
+
+.sb-sidenav-dark {
+    background-color: var(--sidebar-dark) !important;
+}
+
+.sb-sidenav-menu .nav-link {
+    color: rgba(255,255,255,0.7) !important;
+    font-weight: 500 !important;
+    margin: 4px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.sb-sidenav-menu .nav-link:hover {
+    background-color: rgba(255,255,255,0.1) !important;
+    color: #fff !important;
+}
+
+.sb-sidenav-menu .nav-link .sb-nav-link-icon {
+    color: var(--accent-color) !important;
+}
+
+
+a[href="?pagina=novaMovimentacao"] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white !important;
+    margin: 15px !important;
+    padding: 12px !important;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+}
+
+a[href="?pagina=novaMovimentacao"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.4);
+}
+
+
+.card {
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1) !important;
+}
+
+.card-header {
+    background-color: #f8f9fc !important;
+    border-bottom: 1px solid #e3e6f0 !important;
+    font-weight: bold;
+    color: var(--primary-color);
+}
