@@ -1,0 +1,677 @@
+/* ============================================================
+   CEIK ERP — Custom Styles
+   Responsivo · Alinhado ao wireframe · Mobile-first
+   ============================================================ */
+
+/* ---------- TIPOGRAFIA GLOBAL ---------- */
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--gray-50);
+  color: var(--gray-800);
+  font-size: 15px;
+}
+
+/* ---------- TOPNAV ---------- */
+.sb-topnav {
+  background: var(--primary-color) !important;
+  box-shadow: var(--shadow-sm);
+  border-bottom: none;
+}
+.sb-topnav .navbar-brand {
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.3px;
+  color: #fff !important;
+}
+
+/* ---------- SIDENAV ---------- */
+.sb-sidenav {
+  background: var(--gray-800) !important;
+}
+.sb-sidenav-dark .sb-sidenav-menu .nav-link {
+  color: var(--gray-300);
+  font-size: 0.9rem;
+  border-radius: var(--radius-sm);
+  margin: 2px 10px;
+  padding: 10px 14px;
+  transition: background var(--transition), color var(--transition);
+}
+.sb-sidenav-dark .sb-sidenav-menu .nav-link:hover,
+.sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
+  background: rgba(37, 99, 235, 0.25);
+  color: #fff;
+}
+.sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
+  color: var(--primary-light);
+  margin-right: 10px;
+}
+.sb-sidenav-footer {
+  background: var(--gray-900) !important;
+  font-size: 0.8rem;
+  color: var(--gray-400) !important;
+}
+
+/* ---------- CONTEÚDO PRINCIPAL ---------- */
+#layoutSidenav_content {
+  background: var(--gray-50);
+}
+main {
+  padding: 1.5rem 0;
+}
+
+/* ---------- PAGE HEADER ---------- */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gray-200);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.page-header h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0;
+}
+.page-header p {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  margin: 2px 0 0;
+}
+
+/* ---------- CARDS ---------- */
+.card {
+  border: 1px solid var(--gray-200) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-sm) !important;
+  background: var(--white);
+}
+.card-header {
+  background: var(--white) !important;
+  border-bottom: 1px solid var(--gray-200) !important;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
+}
+.card-body {
+  padding: 1.25rem;
+}
+
+/* ---------- STAT CARDS (dashboard) ---------- */
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  height: 100%;
+}
+.stat-card .stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--gray-500);
+  margin-bottom: 6px;
+}
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.stat-card .stat-value.text-primary  { color: var(--primary-color); }
+.stat-card .stat-value.text-danger   { color: var(--danger-color); }
+.stat-card .stat-value.text-warning  { color: var(--warning-color); }
+.stat-card .stat-value.text-success  { color: var(--success-color); }
+
+/* ---------- BADGES DE STATUS ---------- */
+.badge-critico {
+  background: var(--danger-bg);
+  color: var(--danger-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+.badge-vencendo {
+  background: var(--warning-bg);
+  color: var(--warning-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+.badge-normal {
+  background: var(--success-bg);
+  color: var(--success-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+.badge-entrada {
+  background: var(--success-bg);
+  color: var(--success-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+.badge-saida {
+  background: var(--danger-bg);
+  color: var(--danger-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+/* ---------- BOTÕES ---------- */
+.btn-primary {
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+.btn-primary:hover {
+  background: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
+}
+.btn-outline-secondary {
+  border-radius: var(--radius-sm) !important;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--gray-600) !important;
+  border-color: var(--gray-300) !important;
+}
+.btn-outline-secondary:hover {
+  background: var(--gray-100) !important;
+  color: var(--gray-800) !important;
+}
+.btn-success {
+  background: var(--success-color) !important;
+  border-color: var(--success-color) !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+.btn-danger {
+  background: var(--danger-color) !important;
+  border-color: var(--danger-color) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+/* ---------- TABELA ---------- */
+.table {
+  font-size: 0.875rem;
+  color: var(--gray-700);
+}
+.table thead th {
+  background: var(--gray-50);
+  color: var(--gray-500);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--gray-200);
+  border-top: none;
+  padding: 10px 12px;
+}
+.table tbody td {
+  vertical-align: middle !important;
+  text-align: center !important;
+  border-color: var(--gray-100);
+  padding: 10px 12px;
+}
+.table tbody tr:hover {
+  background: var(--gray-50);
+}
+.table-striped > tbody > tr:nth-of-type(odd) > td {
+  background-color: transparent !important;
+}
+
+/* ---------- TABELA RESPONSIVA: esconder colunas em mobile ---------- */
+@media (max-width: 767px) {
+  .table thead th:nth-child(2),  /* Categoria */
+  .table thead th:nth-child(4),  /* Preço */
+  .table thead th:nth-child(5),  /* Vencimento */
+  .table tbody td:nth-child(2),
+  .table tbody td:nth-child(4),
+  .table tbody td:nth-child(5) {
+    display: none;
+  }
+  .table thead th,
+  .table tbody td {
+    padding: 8px 6px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ---------- FORMULÁRIOS ---------- */
+.form-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gray-600);
+  margin-bottom: 4px;
+}
+.form-control,
+.form-select {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm) !important;
+  font-size: 0.9rem;
+  color: var(--gray-800);
+  background: var(--gray-50);
+  padding: 10px 12px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+  background: var(--white);
+}
+.form-floating > .form-control {
+  padding-top: 1.4rem;
+  padding-bottom: 0.6rem;
+}
+.form-floating > label {
+  color: var(--gray-400);
+  font-size: 0.875rem;
+}
+
+/* ---------- SEÇÃO DE FORMULÁRIO ---------- */
+.form-section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--gray-400);
+  margin: 1.25rem 0 0.75rem;
+}
+
+/* ---------- LISTA DE ALERTAS ---------- */
+.alerta-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.alerta-item:last-child { border-bottom: none; }
+.alerta-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.alerta-dot.critico  { background: var(--danger-color); }
+.alerta-dot.vencendo { background: var(--warning-color); }
+.alerta-item .alerta-nome {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--gray-800);
+}
+.alerta-item .alerta-sub {
+  font-size: 0.78rem;
+  color: var(--gray-500);
+  margin-top: 1px;
+}
+
+/* ---------- LINHA DE MOVIMENTAÇÃO ---------- */
+.mov-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.mov-item:last-child { border-bottom: none; }
+.mov-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mov-dot.entrada { background: var(--success-bg); color: var(--success-color); }
+.mov-dot.saida   { background: var(--danger-bg); color: var(--danger-color); }
+.mov-item .mov-nome {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--gray-800);
+}
+.mov-item .mov-sub {
+  font-size: 0.78rem;
+  color: var(--gray-500);
+}
+
+/* ---------- TELA DE LOGIN ---------- */
+#layoutAuthentication {
+  min-height: 100vh;
+  background: var(--gray-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.login-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 380px;
+}
+.login-card .login-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 4px;
+}
+.login-card .login-sub {
+  font-size: 0.85rem;
+  color: var(--gray-400);
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 1rem 0;
+  color: var(--gray-400);
+  font-size: 0.8rem;
+}
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gray-200);
+}
+
+/* ---------- IMAGEM DE PRODUTO ---------- */
+#imgProduto { width: 70px; border-radius: var(--radius-sm); }
+#details { padding: 20px 10px !important; }
+#erroLogin { margin-top: 20px; }
+
+/* ---------- FILTRO DE CATEGORIAS (pill) ---------- */
+.filter-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1rem; }
+.filter-pill {
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: all var(--transition);
+  user-select: none;
+}
+.filter-pill.active,
+.filter-pill:hover {
+  background: var(--primary-light);
+  border-color: var(--primary-color);
+  color: var(--primary-text);
+}
+
+/* ---------- FOOTER ---------- */
+footer.py-4 {
+  background: var(--gray-800) !important;
+  font-size: 0.8rem;
+}
+
+/* ---------- TOGGLE ENTRADA/SAÍDA ---------- */
+.tipo-toggle {
+  display: flex;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.tipo-toggle label {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--gray-500);
+  background: var(--white);
+  transition: all var(--transition);
+  margin: 0;
+}
+.tipo-toggle input[type="radio"] { display: none; }
+.tipo-toggle input[type="radio"]:checked + label.entrada {
+  background: var(--success-bg);
+  color: var(--success-color);
+  border-right: 1px solid var(--gray-200);
+}
+.tipo-toggle input[type="radio"]:checked + label.saida {
+  background: var(--danger-bg);
+  color: var(--danger-color);
+}
+
+/* ============================================================
+   RESPONSIVIDADE — MOBILE FIRST
+   ============================================================ */
+
+/* ---------- CONTAINER PRINCIPAL ---------- */
+@media (max-width: 991px) {
+  main {
+    padding: 1rem 0;
+  }
+  .container-fluid.px-4 {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+/* ---------- PAGE HEADER MOBILE ---------- */
+@media (max-width: 575px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .page-header h1 {
+    font-size: 1.15rem;
+  }
+  .page-header .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ---------- STAT CARDS MOBILE ---------- */
+@media (max-width: 575px) {
+  .stat-card {
+    padding: 1rem 1.1rem;
+  }
+  .stat-card .stat-value {
+    font-size: 1.6rem;
+  }
+  .row.g-3 .col-6 {
+    padding-left: 0.4rem;
+    padding-right: 0.4rem;
+  }
+}
+
+/* ---------- CARD BODY MOBILE ---------- */
+@media (max-width: 575px) {
+  .card-body {
+    padding: 1rem;
+  }
+  .card-header {
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* ---------- FORMULÁRIO: max-width em desktop, full em mobile ---------- */
+.card[style*="max-width"] {
+  max-width: 100% !important;
+}
+@media (min-width: 576px) {
+  .card.form-card {
+    max-width: 520px;
+  }
+}
+
+/* ---------- BOTÕES EM MOBILE ---------- */
+@media (max-width: 575px) {
+  .btn {
+    font-size: 0.82rem;
+    padding: 0.5rem 0.85rem;
+  }
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
+/* ---------- AÇÕES DA TABELA EM MOBILE ---------- */
+@media (max-width: 575px) {
+  .table tbody td:last-child .d-flex {
+    flex-direction: column;
+    gap: 4px !important;
+  }
+  .table tbody td:last-child .btn {
+    width: 100%;
+  }
+}
+
+/* ---------- CHAT WIDGET MOBILE ---------- */
+@media (max-width: 575px) {
+  #chat-container {
+    bottom: 12px !important;
+    right: 12px !important;
+  }
+  #chat-window {
+    width: calc(100vw - 24px) !important;
+    height: 70vh !important;
+    max-height: 420px;
+  }
+}
+
+/* ---------- FILTRO PILLS MOBILE ---------- */
+@media (max-width: 575px) {
+  .filter-pills {
+    gap: 6px;
+  }
+  .filter-pill {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+  }
+}
+
+/* ---------- BUSCA PRODUTO ---------- */
+#buscaProduto {
+  max-width: 100%;
+}
+@media (min-width: 768px) {
+  #buscaProduto {
+    max-width: 360px;
+  }
+}
+
+/* ---------- MOVIMENTAÇÕES: data label ---------- */
+.mov-date-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--gray-400);
+  padding: 14px 0 6px;
+  text-transform: uppercase;
+}
+
+/* ---------- LOGIN: full height mobile ---------- */
+@media (max-width: 575px) {
+  .login-card {
+    padding: 2rem 1.25rem;
+    border-radius: var(--radius-md);
+    box-shadow: none;
+    border: none;
+  }
+  #layoutAuthentication {
+    background: var(--white);
+    align-items: flex-start;
+    padding-top: 3rem;
+  }
+}
+
+/* ---------- SIDENAV: overlay em mobile ---------- */
+@media (max-width: 991px) {
+  #layoutSidenav_nav {
+    z-index: 1045;
+  }
+}
+
+/* ---------- OVERFLOW SCROLL EM TABELAS MOBILE ---------- */
+.card .card-body.p-0 {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.table {
+  min-width: 500px;
+}
+@media (max-width: 575px) {
+  .table {
+    min-width: 320px;
+  }
+}
+
+/* ---------- ALERTA ITEM MOBILE ---------- */
+@media (max-width: 575px) {
+  .alerta-item {
+    gap: 8px;
+    padding: 10px 0;
+  }
+  .alerta-item .alerta-nome {
+    font-size: 0.85rem;
+  }
+}
+
+/* ---------- MOVIMENTAÇÃO ITEM MOBILE ---------- */
+@media (max-width: 575px) {
+  .mov-dot {
+    width: 30px;
+    height: 30px;
+  }
+  .mov-item .mov-nome {
+    font-size: 0.82rem;
+  }
+  .mov-item .mov-sub {
+    font-size: 0.72rem;
+  }
+}
+
+/* ---------- HELPER: texto truncado ---------- */
+.text-truncate-mobile {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+@media (min-width: 768px) {
+  .text-truncate-mobile {
+    max-width: none;
+  }
+}

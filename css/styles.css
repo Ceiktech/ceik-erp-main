@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+/* ====================================
+   IMPORTAÇÕES — mantenha esta ordem
+   ==================================== */
+@import url("variables.css");   /* 1. Tokens: cores, sombras, radii */
+@import url("reset.css");       /* 2. Reset global */
+@import url("bootstrap.css");   /* 3. Bootstrap 5 */
+@import url("sb-admin.css");    /* 4. Layout SB Admin */
+@import url("datatable.css");   /* 5. Simple-DataTables */
+@import url("custom.css");      /* 6. Estilos Ceik */
