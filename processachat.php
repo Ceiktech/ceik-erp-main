@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // 2. Inclui a sua conexão com o banco de dados existente
-include '../db.php'; 
+include 'db.php'; 
 
 /**
  * Função responsável por disparar a pergunta e o contexto para a API da Groq
