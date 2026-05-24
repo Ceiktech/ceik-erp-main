@@ -11225,4 +11225,93 @@ fieldset:disabled .btn {
     display: none !important;
   }
 };
+  /* ==========================================================================
+   MUDANÇAS PARA RESPONSIVIDADE MOBILE (WIRE FRAME FIT)
+   Adicione este bloco no final do arquivo bootstrap.css
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
   
+  /* 1. Força o empilhamento de colunas e elementos flex de lado a lado para vertical */
+  .row, 
+  .d-flex:not(.flex-row):not(.navbar-nav) {
+    flex-direction: column !important;
+    display: block !important; /* Garante o comportamento de bloco se necessário */
+    width: 100% !important;
+  }
+
+  /* 2. Faz com que todas as colunas do Grid ocupem 100% da largura útil */
+  .col,
+  [class^="col-"],
+  [class*=" col-"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 8px !important;  /* Margem interna suave para as laterais */
+    padding-right: 8px !important;
+    margin-bottom: 15px !important; /* Espaçamento inferior para os blocos não colarem */
+  }
+
+  /* Remove margem do último elemento da coluna para não quebrar o design */
+  [class^="col-"]:last-child,
+  [class*=" col-"]:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* 3. Ajusta o espaçamento de Containers e Seções (Evita que o conteúdo saia da tela) */
+  .container, 
+  .container-fluid,
+  .card-body {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important; /* Impede barra de rolagem horizontal na página */
+  }
+
+  /* Suaviza paddings e margens exageradas feitas para desktop */
+  .p-5, .pt-5, .pb-5, .py-5 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+  .p-4, .pt-4, .pb-4, .py-4 { padding-top: 1.25rem !important; padding-bottom: 1.25rem !important; }
+  .m-5, .mt-5, .mb-5, .my-5 { margin-top: 1.5rem !important; margin-bottom: 1.5rem !important; }
+
+  /* 4. Tabelas e Dados Densos (Cria rolagem apenas dentro do elemento, sem quebrar o layout) */
+  table, 
+  .table,
+  .table-responsive {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch; /* Rolagem suave no iOS */
+  }
+
+  /* 5. Ajuste de Tipografia (Evita que títulos gigantes quebrem o wireframe mobile) */
+  h1, .fs-1 { font-size: 1.75rem !important; line-height: 1.2 !important; }
+  h2, .fs-2 { font-size: 1.45rem !important; line-height: 1.2 !important; }
+  h3, .fs-3 { font-size: 1.25rem !important; }
+  h4, .fs-4 { font-size: 1.15rem !important; }
+  body, p, span, lable { font-size: 14px !important; } /* Melhora legibilidade em telas pequenas */
+
+  /* 6. Ajuste de Imagens, Ícones e Inputs */
+  img, .img-fluid {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    margin: 0 auto !important; /* Centraliza imagens no mobile se necessário */
+  }
+
+  input, select, textarea, .form-control, .form-select {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+  }
+
+  /* 7. Alinhamento de botões (Faz botões ocuparem a largura total, comum em wireframes mobile) */
+  .btn, .btn-primary, .btn-secondary {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
+    text-align: center !important;
+  }
+}
