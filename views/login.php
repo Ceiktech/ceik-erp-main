@@ -1,5 +1,5 @@
 <head>  
-    <link rel="stylesheet" href="css/estilo.css?v=<?php echo time(); ?>">
+<link href="css/styles.css" rel="stylesheet" />
 </head>
 <div id="layoutAuthentication">
     <div id="layoutAuthentication_content">
