@@ -142,7 +142,8 @@ async function enviarMensagem() {
         formData.append('pergunta', texto);
 
         // Caminho gerado de forma absoluta e segura via PHP
-        const urlEndpoint = '<?php echo "http://" . $_SERVER['HTTP_HOST'] . "/ceik-erp/processachat.php"; ?>';
+        const urlEndpoint = 'processachat.php';
+
         
         const response = await fetch(urlEndpoint, {
             method: 'POST',
