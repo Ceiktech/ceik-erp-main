@@ -7,22 +7,35 @@ if (!isset($_SESSION['login'])) {
     exit;
 }
 
-$id         = intval($_POST['id']);
-$id_usuario = $_SESSION['id'];
-$tipo       = $_SESSION['tipo'] ?? 'usuario';
+$id           = intval($_POST['id']);
+$id_usuario   = intval($_SESSION['id']);
+$tipo_usuario = $_SESSION['tipo'] ?? 'usuario';
 
-// Admin pode deletar qualquer produto; usuário só os seus
-if ($tipo === 'admin') {
-    $query = "DELETE FROM produtos WHERE id = $id";
-} else {
-    $query = "DELETE FROM produtos WHERE id = $id AND id_usuario = $id_usuario";
+// Verifica se o produto pertence ao usuário (admin pode deletar qualquer um)
+if ($tipo_usuario !== 'admin') {
+    $check = mysqli_query($conexao, "SELECT id FROM produtos WHERE id = $id AND id_usuario = $id_usuario");
+    if (mysqli_num_rows($check) === 0) {
+        header('location: index.php?pagina=produtos&erro=acesso');
+        exit;
+    }
 }
 
-mysqli_query($conexao, $query);
+// Busca o caminho da foto antes de deletar
+$fotoRes = mysqli_query($conexao, "SELECT foto FROM produtos WHERE id = $id");
+$prodRow = mysqli_fetch_assoc($fotoRes);
+
+// Deleta registros filhos primeiro (respeita as foreign keys)
+mysqli_query($conexao, "DELETE FROM movimentacoes WHERE id_produto = $id");
+mysqli_query($conexao, "DELETE FROM estoque WHERE id_produto = $id");
+mysqli_query($conexao, "DELETE FROM alertas WHERE id_produto = $id");
+
+// Agora deleta o produto
+mysqli_query($conexao, "DELETE FROM produtos WHERE id = $id");
 
 // Remove a foto do servidor se existir
-$fotoRes = mysqli_query($conexao, "SELECT foto FROM produtos WHERE id = $id");
-// (produto já deletado, mas aqui limpamos o arquivo se quiser)
+if (!empty($prodRow['foto']) && file_exists(__DIR__ . '/' . $prodRow['foto'])) {
+    unlink(__DIR__ . '/' . $prodRow['foto']);
+}
 
 header('location: index.php?pagina=produtos&deletaOk=1');
 exit;
