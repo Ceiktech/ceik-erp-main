@@ -93,14 +93,14 @@
             <button onclick="toggleChat()" style="background:none; border:none; color:white; font-size: 20px; cursor:pointer;">&times;</button>
         </div>
         
-        <div id="chat-content" style="flex: 1; padding: 15px; overflow-y: auto; background: #fdfdfd; display: flex; flex-direction: column; gap: 10px;">
+        <div id="widget-content" style="flex: 1; padding: 15px; overflow-y: auto; background: #fdfdfd; display: flex; flex-direction: column; gap: 10px;">
             <div style="background: #e9ecef; padding: 10px; border-radius: 10px; font-size: 14px; align-self: flex-start; max-width: 85%;">
                 Olá! Como posso ajudar com o sistema hoje?
             </div>
         </div>
 
         <div style="padding: 15px; border-top: 1px solid #eee; display: flex; gap: 8px;">
-            <input type="text" id="chat-input" placeholder="Digite sua dúvida..." style="flex: 1; border: 1px solid #ddd; padding: 8px 12px; border-radius: 20px; outline: none; font-size: 14px;">
+            <input type="text" id="widget-input" placeholder="Digite sua dúvida..." style="flex: 1; border: 1px solid #ddd; padding: 8px 12px; border-radius: 20px; outline: none; font-size: 14px;">
             <button onclick="enviarMensagem()" style="background: #0d6efd; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer;">
                 <i class="fas fa-paper-plane"></i>
             </button>
@@ -122,7 +122,7 @@ function toggleChat() {
 
 // Envia a mensagem para o PHP e trata o retorno da IA
 async function enviarMensagem() {
-    const input = document.getElementById('chat-input');
+    const input = document.getElementById('widget-input');
     const content = document.getElementById('chat-content');
     const texto = input.value.trim();
 
@@ -167,7 +167,7 @@ async function enviarMensagem() {
 
 // Permite enviar as mensagens pressionando a tecla ENTER
 document.addEventListener('DOMContentLoaded', function() {
-    const inputField = document.getElementById('chat-input');
+    const inputField = document.getElementById('widget-input');
     if(inputField) {
         inputField.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {

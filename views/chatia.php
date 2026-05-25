@@ -9,12 +9,12 @@
   </div>
 
   <div class="row justify-content-start">
-    <div class="col-12 col-md-8 col-lg-6">
-      <div class="card" style="height: 70vh; display: flex; flex-direction: column;">
+    <div class="col-12 col-md-9 col-lg-7">
+      <div class="card" style="height:72vh;display:flex;flex-direction:column;">
 
-        <!-- Cabeçalho do chat -->
+        <!-- Cabeçalho -->
         <div class="card-header d-flex align-items-center gap-2">
-          <div style="width:32px;height:32px;background:var(--primary-color);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+          <div style="width:32px;height:32px;background:var(--primary-color);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <i class="fas fa-robot" style="color:#fff;font-size:14px;"></i>
           </div>
           <div>
@@ -23,41 +23,44 @@
           </div>
         </div>
 
-        <!-- Área de mensagens -->
-        <div id="chat-content" style="flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:8px;">
-          <!-- Mensagem inicial -->
+        <!-- Mensagens — IDs únicos com prefixo "ia-" -->
+        <div id="ia-content" style="flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:8px;">
           <div style="background:var(--primary-light);color:var(--primary-text);padding:10px 14px;border-radius:12px 12px 12px 4px;font-size:0.875rem;max-width:85%;align-self:flex-start;">
             Olá, <strong><?php echo htmlspecialchars($_SESSION['nome'] ?? 'usuário'); ?></strong>! 👋<br>
             Sou o assistente da Ceik Technology. Como posso te ajudar hoje?
           </div>
 
           <!-- Sugestões rápidas -->
-          <div id="sugestoes" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
-            <button onclick="perguntaRapida('Quais produtos estão com estoque crítico?')"
+          <div id="ia-sugestoes" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">
+            <button onclick="iaPerguntaRapida('Quais produtos estão com estoque crítico?')"
               style="background:var(--white);border:1px solid var(--gray-200);border-radius:20px;padding:5px 12px;font-size:0.78rem;color:var(--gray-600);cursor:pointer;">
               Estoque crítico
             </button>
-            <button onclick="perguntaRapida('Quais produtos vencem em breve?')"
+            <button onclick="iaPerguntaRapida('Quais produtos vencem em breve?')"
               style="background:var(--white);border:1px solid var(--gray-200);border-radius:20px;padding:5px 12px;font-size:0.78rem;color:var(--gray-600);cursor:pointer;">
               Próximos vencimentos
             </button>
-            <button onclick="perguntaRapida('Como registro uma entrada de produto?')"
+            <button onclick="iaPerguntaRapida('Qual produto tem menor estoque?')"
+              style="background:var(--white);border:1px solid var(--gray-200);border-radius:20px;padding:5px 12px;font-size:0.78rem;color:var(--gray-600);cursor:pointer;">
+              Menor estoque
+            </button>
+            <button onclick="iaPerguntaRapida('Como registro uma entrada de produto?')"
               style="background:var(--white);border:1px solid var(--gray-200);border-radius:20px;padding:5px 12px;font-size:0.78rem;color:var(--gray-600);cursor:pointer;">
               Como cadastrar produto?
             </button>
           </div>
         </div>
 
-        <!-- Input -->
+        <!-- Input — ID único "ia-input" -->
         <div style="padding:0.75rem 1rem;border-top:1px solid var(--gray-200);display:flex;gap:8px;align-items:center;">
           <input
             type="text"
-            id="chat-input"
+            id="ia-input"
             class="form-control"
             placeholder="Digite sua dúvida..."
             style="border-radius:20px;font-size:0.875rem;"
           >
-          <button onclick="enviarMensagemChat()"
+          <button onclick="iaEnviar()"
             style="background:var(--primary-color);border:none;border-radius:50%;width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;">
             <i class="fas fa-paper-plane" style="color:#fff;font-size:13px;"></i>
           </button>
@@ -71,26 +74,26 @@
 </main>
 
 <script>
-async function enviarMensagemChat() {
-    const input   = document.getElementById('chat-input');
-    const content = document.getElementById('chat-content');
+async function iaEnviar() {
+    const input   = document.getElementById('ia-input');
+    const content = document.getElementById('ia-content');
     const texto   = input.value.trim();
     if (!texto) return;
 
-    // Esconde sugestões após primeira mensagem
-    const sug = document.getElementById('sugestoes');
+    // Remove sugestões
+    const sug = document.getElementById('ia-sugestoes');
     if (sug) sug.remove();
 
     // Mensagem do usuário
     content.innerHTML += `
       <div style="background:var(--primary-color);color:#fff;padding:10px 14px;border-radius:12px 12px 4px 12px;font-size:0.875rem;max-width:85%;align-self:flex-end;">
-        ${escapeHtml(texto)}
+        ${iaEscape(texto)}
       </div>`;
     input.value = '';
     content.scrollTop = content.scrollHeight;
 
     // Indicador de digitação
-    const tempId = 'temp-' + Date.now();
+    const tempId = 'ia-temp-' + Date.now();
     content.innerHTML += `
       <div id="${tempId}" style="color:var(--gray-400);font-size:0.78rem;font-style:italic;padding:4px 0;">
         IA está escrevendo...
@@ -98,15 +101,12 @@ async function enviarMensagemChat() {
     content.scrollTop = content.scrollHeight;
 
     try {
-        const formData = new FormData();
-        formData.append('pergunta', texto);
+        const form = new FormData();
+        form.append('pergunta', texto);
 
-        const response = await fetch('processachat.php', {
-            method: 'POST',
-            body: formData
-        });
+        const res  = await fetch('processachat.php', { method: 'POST', body: form });
+        const data = await res.text();
 
-        const data = await response.text();
         const temp = document.getElementById(tempId);
         if (temp) temp.remove();
 
@@ -122,22 +122,17 @@ async function enviarMensagemChat() {
     content.scrollTop = content.scrollHeight;
 }
 
-function perguntaRapida(texto) {
-    document.getElementById('chat-input').value = texto;
-    enviarMensagemChat();
+function iaPerguntaRapida(texto) {
+    document.getElementById('ia-input').value = texto;
+    iaEnviar();
 }
 
-function escapeHtml(str) {
+function iaEscape(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// Enviar com Enter
-document.addEventListener('DOMContentLoaded', function() {
-    const input = document.getElementById('chat-input');
-    if (input) {
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') enviarMensagemChat();
-        });
-    }
+// Enter para enviar
+document.getElementById('ia-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') iaEnviar();
 });
 </script>
