@@ -57,11 +57,6 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-cube"></i></div>
                                 Produtos
                             </a>
-
-                            <a class="nav-link" href="?pagina=fabricantes">
-                                <div class="sb-nav-link-icon"><i class="fas fa-cubes"></i></div>
-                                Fabricantes
-                            </a>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
