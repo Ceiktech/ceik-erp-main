@@ -675,3 +675,261 @@ footer.py-4 {
     max-width: none;
   }
 }
+
+/* ========================================
+   RESPONSIVIDADE MOBILE ERP CEIK
+   COLE NO FINAL DO SEU custom.css
+======================================== */
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.container,
+.container-fluid {
+    width: 100%;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+/* ========================================
+   SIDEBAR
+======================================== */
+
+@media (max-width: 768px) {
+
+    .sb-sidenav {
+        width: 220px;
+        position: fixed;
+        z-index: 9999;
+        left: -220px;
+        transition: 0.3s;
+    }
+
+    body.sb-sidenav-toggled .sb-sidenav {
+        left: 0;
+    }
+
+    #layoutSidenav_content {
+        margin-left: 0 !important;
+        width: 100%;
+    }
+
+    #layoutSidenav {
+        display: block;
+    }
+}
+
+/* ========================================
+   NAVBAR
+======================================== */
+
+@media (max-width: 768px) {
+
+    .navbar {
+        padding: 10px;
+    }
+
+    .navbar-brand {
+        font-size: 15px;
+    }
+
+    .topbar,
+    .sb-topnav {
+        width: 100%;
+    }
+}
+
+/* ========================================
+   DASHBOARD
+======================================== */
+
+@media (max-width: 768px) {
+
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .col,
+    .col-md-3,
+    .col-md-4,
+    .col-md-6,
+    .col-lg-3,
+    .col-lg-4,
+    .col-lg-6 {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+        padding: 0;
+        margin-bottom: 15px;
+    }
+}
+
+/* ========================================
+   CARDS
+======================================== */
+
+@media (max-width: 768px) {
+
+    .card {
+        border-radius: 12px;
+        margin-bottom: 15px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+}
+
+/* ========================================
+   TABELAS
+======================================== */
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+
+    table {
+        min-width: 700px;
+    }
+
+    .table td,
+    .table th {
+        font-size: 13px;
+        white-space: nowrap;
+    }
+}
+
+/* ========================================
+   FORMULÁRIOS
+======================================== */
+
+@media (max-width: 768px) {
+
+    input,
+    select,
+    textarea,
+    button {
+        font-size: 16px !important;
+    }
+
+    .form-control,
+    .form-select {
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* ========================================
+   BOTÕES
+======================================== */
+
+@media (max-width: 768px) {
+
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* ========================================
+   LOGIN
+======================================== */
+
+@media (max-width: 768px) {
+
+    .login-container,
+    .card-login {
+        width: 100% !important;
+        padding: 20px;
+    }
+}
+
+/* ========================================
+   MODAIS
+======================================== */
+
+@media (max-width: 768px) {
+
+    .modal-dialog {
+        margin: 10px;
+    }
+}
+
+/* ========================================
+   GRÁFICOS
+======================================== */
+
+canvas {
+    max-width: 100% !important;
+}
+
+/* ========================================
+   TEXTO E ESPAÇAMENTO
+======================================== */
+
+@media (max-width: 768px) {
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    h3 {
+        font-size: 20px;
+    }
+
+    .p-4 {
+        padding: 1rem !important;
+    }
+
+    .mt-4 {
+        margin-top: 1rem !important;
+    }
+}
+
+/* ========================================
+   CORREÇÃO DE LARGURAS FIXAS
+======================================== */
+
+@media (max-width: 768px) {
+
+    * {
+        max-width: 100%;
+    }
+
+    [style*="width: 500px"],
+    [style*="width:500px"] {
+        width: 100% !important;
+    }
+}
+
+/* ========================================
+   FOOTER
+======================================== */
+
+@media (max-width: 768px) {
+
+    footer {
+        text-align: center;
+        padding: 15px;
+    }
+}
