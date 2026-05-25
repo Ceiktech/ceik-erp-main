@@ -2,36 +2,64 @@
 include 'db.php';
 session_start();
 
-$id_usuario = 1;
-
-$nome = $_POST['nome'];
-$codigo_barras = $_POST['codigo_barras'];
-$categoria = $_POST['categoria'];
-$preco = str_replace(",", ".", $_POST['preco']);
-$quantidade = $_POST['quantidade'];
-$qtd_minima = $_POST['qtd_minima'];
-$data_vencimento = $_POST['data_vencimento'];
-
-$foto = "";
-
-if($_FILES['foto']['name'] != ''){
-
-    $pasta = "arquivos/";
-    $nomeArquivo = uniqid() . ".jpg";
-
-    move_uploaded_file($_FILES['foto']['tmp_name'], $pasta.$nomeArquivo);
-
-    $foto = $pasta.$nomeArquivo;
+if (!isset($_SESSION['login'])) {
+    header('location: index.php');
+    exit;
 }
 
+$id_usuario    = intval($_SESSION['id']); // usa o usuário logado, não hardcoded 1
+$nome          = mysqli_real_escape_string($conexao, trim($_POST['nome'] ?? ''));
+$codigo_barras = mysqli_real_escape_string($conexao, trim($_POST['codigo_barras'] ?? ''));
+$categoria     = mysqli_real_escape_string($conexao, trim($_POST['categoria'] ?? ''));
+$preco         = floatval(str_replace(',', '.', $_POST['preco'] ?? '0'));
+$quantidade    = intval($_POST['quantidade'] ?? 0);
+$qtd_minima    = intval($_POST['qtd_minima'] ?? 0);
+$data_venc     = !empty($_POST['data_vencimento']) ? "'" . mysqli_real_escape_string($conexao, $_POST['data_vencimento']) . "'" : "NULL";
+
+// Upload de foto
+$foto = '';
+if (!empty($_FILES['foto']['name'])) {
+    $pasta = __DIR__ . '/arquivos/';
+
+    // Cria a pasta se não existir
+    if (!is_dir($pasta)) {
+        mkdir($pasta, 0755, true);
+    }
+
+    $extensao = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
+    $extensoesPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+    if (in_array($extensao, $extensoesPermitidas) && $_FILES['foto']['size'] <= 5242880) {
+        $nomeArquivo = uniqid('prod_') . '.' . $extensao;
+        $destino     = $pasta . $nomeArquivo;
+
+        if (move_uploaded_file($_FILES['foto']['tmp_name'], $destino)) {
+            $foto = 'arquivos/' . $nomeArquivo;
+        }
+    }
+}
+
+$fotoSafe = mysqli_real_escape_string($conexao, $foto);
+
 $query = "INSERT INTO produtos
-(id_usuario,nome,codigo_barras,categoria,preco,qtd_minima,data_vencimento,quantidade,foto)
+          (id_usuario, nome, codigo_barras, categoria, preco, qtd_minima, data_vencimento, quantidade, foto)
+          VALUES
+          ($id_usuario, '$nome', '$codigo_barras', '$categoria', $preco, $qtd_minima, $data_venc, $quantidade, '$fotoSafe')";
 
-VALUES
+$result = mysqli_query($conexao, $query);
 
-('$id_usuario','$nome','$codigo_barras','$categoria','$preco','$qtd_minima','$data_vencimento','$quantidade','$foto')";
+if ($result) {
+    $id_produto = mysqli_insert_id($conexao);
 
-mysqli_query($conexao,$query);
+    // Insere também na tabela estoque
+    mysqli_query($conexao,
+        "INSERT INTO estoque (id_produto, quantidade, atualizado_em)
+         VALUES ($id_produto, $quantidade, NOW())
+         ON DUPLICATE KEY UPDATE quantidade = $quantidade, atualizado_em = NOW()"
+    );
 
-header('location:index.php?pagina=produtos&cadastroOk');
-?>
+    header('location: index.php?pagina=produtos&cadastroOk=1');
+} else {
+    header('location: index.php?pagina=novoProduto&erro=db');
+}
+exit;

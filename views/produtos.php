@@ -1,7 +1,10 @@
 <?php
 include 'db.php';
+$id_usuario   = intval($_SESSION['id']);
+$tipo_usuario = $_SESSION['tipo'] ?? 'usuario';
+$filtro       = ($tipo_usuario === 'admin') ? '' : "WHERE id_usuario = $id_usuario";
 
-$query = "SELECT * FROM produtos ORDER BY id DESC";
+$query = "SELECT * FROM produtos $filtro ORDER BY id DESC";
 $consultaProdutos = mysqli_query($conexao, $query);
 $totalProdutos = mysqli_num_rows($consultaProdutos);
 ?>

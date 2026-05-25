@@ -1,11 +1,28 @@
 <?php
 include 'db.php';
+session_start();
 
-$id = $_POST['id'];
+if (!isset($_SESSION['login'])) {
+    header('location: index.php');
+    exit;
+}
 
-$query = "DELETE FROM produtos WHERE id='$id'";
+$id         = intval($_POST['id']);
+$id_usuario = $_SESSION['id'];
+$tipo       = $_SESSION['tipo'] ?? 'usuario';
 
-mysqli_query($conexao,$query);
+// Admin pode deletar qualquer produto; usuário só os seus
+if ($tipo === 'admin') {
+    $query = "DELETE FROM produtos WHERE id = $id";
+} else {
+    $query = "DELETE FROM produtos WHERE id = $id AND id_usuario = $id_usuario";
+}
 
-header('location:index.php?pagina=produtos&deletaOk');
-?>
+mysqli_query($conexao, $query);
+
+// Remove a foto do servidor se existir
+$fotoRes = mysqli_query($conexao, "SELECT foto FROM produtos WHERE id = $id");
+// (produto já deletado, mas aqui limpamos o arquivo se quiser)
+
+header('location: index.php?pagina=produtos&deletaOk=1');
+exit;

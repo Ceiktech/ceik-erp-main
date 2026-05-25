@@ -68,6 +68,12 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-robot"></i></div>
                                 Assistente IA
                             </a>
+                            <?php if(($_SESSION['tipo'] ?? '') === 'admin'): ?>
+                            <a class="nav-link <?php echo (isset($_GET['pagina']) && $_GET['pagina']==='admin') ? 'active' : ''; ?>" href="?pagina=admin">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users-cog"></i></div>
+                                Admin
+                            </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
