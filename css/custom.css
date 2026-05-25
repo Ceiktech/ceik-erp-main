@@ -675,4 +675,66 @@ footer.py-4 {
     max-width: none;
   }
 }
+/* ============================================================
+   FIX MOBILE — SB Admin padding-left override
+   O sb-admin.css aplica padding-left:225px sem media query,
+   o que empurra o conteúdo para fora da tela em mobile.
+   ============================================================ */
 
+/* Em mobile: conteúdo ocupa a tela toda, sem padding do sidenav */
+@media (max-width: 991px) {
+  .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
+    padding-left: 0 !important;
+  }
+
+  /* Sidenav fica oculto por padrão em mobile (desliza por cima) */
+  #layoutSidenav #layoutSidenav_nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 225px;
+    transform: translateX(-225px);
+    transition: transform 0.2s ease-in-out;
+    z-index: 1045;
+  }
+
+  /* Quando o toggle abre o menu */
+  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+    transform: translateX(0);
+  }
+
+  /* Overlay escuro atrás do sidenav aberto */
+  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1044;
+  }
+
+  /* Fechar sidenav ao clicar no overlay */
+  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
+    overflow: hidden;
+  }
+}
+
+/* Topnav: garante que o brand e toggle ficam visíveis em mobile */
+@media (max-width: 991px) {
+  .sb-topnav .navbar-brand {
+    font-size: 1rem;
+  }
+  .sb-topnav {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+/* Footer: empilha em mobile */
+@media (max-width: 575px) {
+  footer .d-flex {
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+  }
+}
