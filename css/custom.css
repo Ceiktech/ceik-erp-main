@@ -677,66 +677,29 @@ footer.py-4 {
 }
 
 /* ============================================================
-   FIX MOBILE — corrige padding-left 225px do sb-admin.css
-   A regra original é: .sb-nav-fixed #layoutSidenav #layoutSidenav_content
-   Para sobrescrever precisamos de especificidade igual ou maior.
+   FIX MOBILE
    ============================================================ */
-
 @media (max-width: 991.98px) {
+  /* Garante que o conteúdo ocupa a tela toda em mobile */
+  #layoutSidenav #layoutSidenav_content {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    width: 100% !important;
+  }
 
-  /* Remove o padding que empurra o conteúdo para fora da tela */
   .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
     padding-left: 0 !important;
-    top: 56px;
   }
 
-  /* Sidenav fica fora da tela por padrão */
-  .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 225px;
-    z-index: 1045;
-    transform: translateX(-225px);
-    transition: transform 0.2s ease-in-out;
-  }
-
-  /* Sidenav visível ao abrir */
-  .sb-sidenav-toggled .sb-nav-fixed #layoutSidenav #layoutSidenav_nav,
-  .sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
-    transform: translateX(0);
-  }
-
-  /* Overlay escuro ao abrir o menu */
-  .sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_content::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 1044;
-  }
-
-  /* Container com padding lateral confortável */
+  /* Padding lateral confortável */
   .container-fluid {
     padding-left: 1rem !important;
     padding-right: 1rem !important;
   }
 
-  /* Topnav compacto */
+  /* Topnav */
   .sb-topnav .navbar-brand {
     width: auto !important;
-    font-size: 1rem;
-  }
-
-  /* Page header empilhado */
-  .page-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  .page-header h1 {
-    font-size: 1.2rem;
   }
 
   /* Footer empilhado */
