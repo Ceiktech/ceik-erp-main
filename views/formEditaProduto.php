@@ -3,7 +3,10 @@ include 'db.php';
 
 $id = $_POST['id'];
 
-$query = "SELECT * FROM produtos WHERE id='$id'";
+$uid = intval($_SESSION['id']);
+$isAdm = ($_SESSION['tipo'] ?? '') === 'admin';
+$filtroEdit = $isAdm ? "WHERE id='$id'" : "WHERE id='$id' AND id_usuario=$uid";
+$query = "SELECT * FROM produtos $filtroEdit";
 $consulta = mysqli_query($conexao,$query);
 
 $linha = mysqli_fetch_assoc($consulta);

@@ -1,6 +1,9 @@
 <?php
 include 'db.php';
-$produtos = mysqli_query($conexao, "SELECT * FROM produtos ORDER BY nome");
+$uid = intval($_SESSION['id']);
+$isAdm = ($_SESSION['tipo'] ?? '') === 'admin';
+$filtroMov = $isAdm ? '' : "WHERE id_usuario = $uid";
+$produtos = mysqli_query($conexao, "SELECT * FROM produtos $filtroMov ORDER BY nome");
 ?>
 
 <main>
