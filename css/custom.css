@@ -678,84 +678,59 @@ footer.py-4 {
 
 /* ========================================
    RESPONSIVIDADE MOBILE ERP CEIK
-   COLE NO FINAL DO SEU custom.css
+   VERSÃO CORRIGIDA
 ======================================== */
 
+/* NÃO QUEBRA O LAYOUT DESKTOP */
 html,
 body {
     overflow-x: hidden;
 }
 
+/* IMAGENS */
 img {
     max-width: 100%;
     height: auto;
 }
 
-.container,
-.container-fluid {
-    width: 100%;
-    padding-left: 12px;
-    padding-right: 12px;
-}
-
 /* ========================================
-   SIDEBAR
+   APENAS MOBILE
 ======================================== */
 
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
 
-    .sb-sidenav {
-        width: 220px;
-        position: fixed;
-        z-index: 9999;
-        left: -220px;
-        transition: 0.3s;
+    /* CONTAINER */
+
+    .container,
+    .container-fluid {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
     }
 
-    body.sb-sidenav-toggled .sb-sidenav {
-        left: 0;
+    /* SIDEBAR */
+
+    .sb-sidenav {
+        width: 220px !important;
     }
 
     #layoutSidenav_content {
         margin-left: 0 !important;
-        width: 100%;
+        width: 100% !important;
     }
 
-    #layoutSidenav {
-        display: block;
-    }
-}
-
-/* ========================================
-   NAVBAR
-======================================== */
-
-@media (max-width: 768px) {
-
-    .navbar {
-        padding: 10px;
-    }
-
-    .navbar-brand {
-        font-size: 15px;
-    }
-
-    .topbar,
-    .sb-topnav {
-        width: 100%;
-    }
-}
-
-/* ========================================
-   DASHBOARD
-======================================== */
-
-@media (max-width: 768px) {
+    /* ROWS */
 
     .row {
-        margin-left: 0;
-        margin-right: 0;
+        margin-left: -5px !important;
+        margin-right: -5px !important;
     }
+
+    .row > * {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+
+    /* COLUNAS */
 
     .col,
     .col-md-3,
@@ -764,172 +739,95 @@ img {
     .col-lg-3,
     .col-lg-4,
     .col-lg-6 {
-        width: 100%;
-        max-width: 100%;
-        flex: 0 0 100%;
-        padding: 0;
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
         margin-bottom: 15px;
     }
-}
 
-/* ========================================
-   CARDS
-======================================== */
-
-@media (max-width: 768px) {
+    /* CARDS */
 
     .card {
-        border-radius: 12px;
         margin-bottom: 15px;
+        border-radius: 10px;
     }
 
     .card-body {
         padding: 15px;
     }
-}
 
-/* ========================================
-   TABELAS
-======================================== */
+    /* TABELAS */
 
-.table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-@media (max-width: 768px) {
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 
     table {
-        min-width: 700px;
+        min-width: 600px;
     }
 
     .table td,
     .table th {
-        font-size: 13px;
         white-space: nowrap;
+        font-size: 13px;
     }
-}
 
-/* ========================================
-   FORMULÁRIOS
-======================================== */
-
-@media (max-width: 768px) {
-
-    input,
-    select,
-    textarea,
-    button {
-        font-size: 16px !important;
-    }
+    /* FORMULÁRIOS */
 
     .form-control,
     .form-select {
+        font-size: 16px !important;
         margin-bottom: 10px;
     }
+
+    /* BOTÕES */
 
     .btn {
         width: 100%;
         margin-bottom: 10px;
     }
-}
 
-/* ========================================
-   BOTÕES
-======================================== */
+    /* NAVBAR */
 
-@media (max-width: 768px) {
-
-    .btn-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+    .navbar-brand {
+        font-size: 15px;
     }
-}
 
-/* ========================================
-   LOGIN
-======================================== */
-
-@media (max-width: 768px) {
-
-    .login-container,
-    .card-login {
-        width: 100% !important;
-        padding: 20px;
-    }
-}
-
-/* ========================================
-   MODAIS
-======================================== */
-
-@media (max-width: 768px) {
-
-    .modal-dialog {
-        margin: 10px;
-    }
-}
-
-/* ========================================
-   GRÁFICOS
-======================================== */
-
-canvas {
-    max-width: 100% !important;
-}
-
-/* ========================================
-   TEXTO E ESPAÇAMENTO
-======================================== */
-
-@media (max-width: 768px) {
+    /* TÍTULOS */
 
     h1 {
         font-size: 24px;
     }
 
     h2 {
-        font-size: 22px;
-    }
-
-    h3 {
         font-size: 20px;
     }
 
-    .p-4 {
-        padding: 1rem !important;
+    h3 {
+        font-size: 18px;
     }
 
-    .mt-4 {
-        margin-top: 1rem !important;
-    }
-}
+    /* FOOTER */
 
-/* ========================================
-   CORREÇÃO DE LARGURAS FIXAS
-======================================== */
-
-@media (max-width: 768px) {
-
-    * {
-        max-width: 100%;
-    }
-
-    [style*="width: 500px"],
-    [style*="width:500px"] {
+    footer,
+    .footer {
         width: 100% !important;
-    }
-}
-
-/* ========================================
-   FOOTER
-======================================== */
-
-@media (max-width: 768px) {
-
-    footer {
+        margin-left: 0 !important;
         text-align: center;
-        padding: 15px;
+        padding: 15px 10px;
+    }
+
+    /* CANVAS / GRÁFICOS */
+
+    canvas {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* REMOVE QUALQUER LARGURA FIXA */
+
+    [style*="width:"] {
+        max-width: 100% !important;
     }
 }
