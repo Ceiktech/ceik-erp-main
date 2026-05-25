@@ -76,12 +76,7 @@
                     </div>
                 </nav>
             </div>
-            <a class="nav-link" href="?pagina=novaMovimentacao">
-                <div class="sb-nav-link-icon">
-                    <i class="fas fa-plus-circle"></i>
-                </div>
-                Nova Movimentação
-            </a>
+
             <?php
                 }
             ?>
@@ -148,7 +143,7 @@ async function enviarMensagem() {
         formData.append('pergunta', texto);
 
         // Caminho gerado de forma absoluta e segura via PHP
-        const urlEndpoint = '<?php echo "http://" . $_SERVER['HTTP_HOST'] . "/ceik-erp/views/processachat.php"; ?>';
+        const urlEndpoint = 'processachat.php';
         
         const response = await fetch(urlEndpoint, {
             method: 'POST',
