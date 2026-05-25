@@ -40,22 +40,33 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <a class="nav-link" href="?pagina=alertas">
-                                <div class="sb-nav-link-icon">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                </div>
-                                Alertas
-                            </a>
-                            <a class="nav-link" href="?pagina=home">
-                                <div class="sb-nav-link-icon">
-                                    <i class="fas fa-chart-area"></i>
-                                </div>
+                            <a class="nav-link <?php echo (!isset($_GET['pagina']) || $_GET['pagina']==='home') ? 'active' : ''; ?>" href="?pagina=home">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Dashboard
                             </a>
-                                                                        
-                            <a class="nav-link" href="?pagina=produtos">
-                                <div class="sb-nav-link-icon"><i class="fas fa-cube"></i></div>
-                                Produtos
+                            <a class="nav-link <?php echo (isset($_GET['pagina']) && $_GET['pagina']==='alertas') ? 'active' : ''; ?>" href="?pagina=alertas">
+                                <div class="sb-nav-link-icon"><i class="fas fa-bell"></i></div>
+                                Alertas
+                            </a>
+                            <a class="nav-link <?php echo (isset($_GET['pagina']) && in_array($_GET['pagina'],['produtos','novoProduto','detalheProduto','formEditaProduto'])) ? 'active' : ''; ?>" href="?pagina=produtos">
+                                <div class="sb-nav-link-icon"><i class="fas fa-boxes"></i></div>
+                                Estoque
+                            </a>
+                            <a class="nav-link <?php echo (isset($_GET['pagina']) && in_array($_GET['pagina'],['movimentacoes','novaMovimentacao'])) ? 'active' : ''; ?>" href="?pagina=movimentacoes">
+                                <div class="sb-nav-link-icon"><i class="fas fa-exchange-alt"></i></div>
+                                Movimentações
+                            </a>
+                            <a class="nav-link <?php echo (isset($_GET['pagina']) && $_GET['pagina']==='preNota') ? 'active' : ''; ?>" href="?pagina=preNota">
+                                <div class="sb-nav-link-icon"><i class="fas fa-file-invoice"></i></div>
+                                Pré-nota
+                            </a>
+                            <a class="nav-link <?php echo (isset($_GET['pagina']) && $_GET['pagina']==='relatorio') ? 'active' : ''; ?>" href="?pagina=relatorio">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
+                                Relatório
+                            </a>
+                            <a class="nav-link <?php echo (isset($_GET['pagina']) && $_GET['pagina']==='chatia') ? 'active' : ''; ?>" href="?pagina=chatia">
+                                <div class="sb-nav-link-icon"><i class="fas fa-robot"></i></div>
+                                Assistente IA
                             </a>
                         </div>
                     </div>
@@ -137,8 +148,7 @@ async function enviarMensagem() {
         formData.append('pergunta', texto);
 
         // Caminho gerado de forma absoluta e segura via PHP
-        const urlEndpoint = 'processachat.php';
-
+        const urlEndpoint = '<?php echo "http://" . $_SERVER['HTTP_HOST'] . "/ceik-erp/views/processachat.php"; ?>';
         
         const response = await fetch(urlEndpoint, {
             method: 'POST',
