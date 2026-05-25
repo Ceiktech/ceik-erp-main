@@ -675,63 +675,71 @@ footer.py-4 {
     max-width: none;
   }
 }
+
 /* ============================================================
-   FIX MOBILE — SB Admin padding-left override
-   O sb-admin.css aplica padding-left:225px sem media query,
-   o que empurra o conteúdo para fora da tela em mobile.
+   FIX MOBILE — corrige padding-left 225px do sb-admin.css
+   A regra original é: .sb-nav-fixed #layoutSidenav #layoutSidenav_content
+   Para sobrescrever precisamos de especificidade igual ou maior.
    ============================================================ */
 
-/* Em mobile: conteúdo ocupa a tela toda, sem padding do sidenav */
-@media (max-width: 991px) {
+@media (max-width: 991.98px) {
+
+  /* Remove o padding que empurra o conteúdo para fora da tela */
   .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
     padding-left: 0 !important;
+    top: 56px;
   }
 
-  /* Sidenav fica oculto por padrão em mobile (desliza por cima) */
-  #layoutSidenav #layoutSidenav_nav {
+  /* Sidenav fica fora da tela por padrão */
+  .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
     position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
     width: 225px;
+    z-index: 1045;
     transform: translateX(-225px);
     transition: transform 0.2s ease-in-out;
-    z-index: 1045;
   }
 
-  /* Quando o toggle abre o menu */
-  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+  /* Sidenav visível ao abrir */
+  .sb-sidenav-toggled .sb-nav-fixed #layoutSidenav #layoutSidenav_nav,
+  .sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
     transform: translateX(0);
   }
 
-  /* Overlay escuro atrás do sidenav aberto */
-  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content::before {
+  /* Overlay escuro ao abrir o menu */
+  .sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_content::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.45);
+    background: rgba(0, 0, 0, 0.45);
     z-index: 1044;
   }
 
-  /* Fechar sidenav ao clicar no overlay */
-  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
-    overflow: hidden;
+  /* Container com padding lateral confortável */
+  .container-fluid {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
   }
-}
 
-/* Topnav: garante que o brand e toggle ficam visíveis em mobile */
-@media (max-width: 991px) {
+  /* Topnav compacto */
   .sb-topnav .navbar-brand {
+    width: auto !important;
     font-size: 1rem;
   }
-  .sb-topnav {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-}
 
-/* Footer: empilha em mobile */
-@media (max-width: 575px) {
+  /* Page header empilhado */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .page-header h1 {
+    font-size: 1.2rem;
+  }
+
+  /* Footer empilhado */
   footer .d-flex {
     flex-direction: column;
     gap: 4px;
