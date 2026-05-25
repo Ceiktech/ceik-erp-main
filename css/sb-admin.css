@@ -1,4 +1,3 @@
-
 html,
 body {
   height: 100%;
@@ -17,16 +16,27 @@ body {
   min-width: 0;
 }
 
+/* ── LAYOUT SIDENAV ── */
 #layoutSidenav {
   display: flex;
 }
+
+/* Mobile: sidenav escondido fora da tela, posição fixa por cima do conteúdo */
 #layoutSidenav #layoutSidenav_nav {
-  flex-basis: 225px;
+  flex-basis: 0;
   flex-shrink: 0;
   transition: transform 0.15s ease-in-out;
   z-index: 1038;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 225px;
   transform: translateX(-225px);
+  overflow-y: auto;
 }
+
+/* Mobile: conteúdo ocupa 100% sem deslocamento */
 #layoutSidenav #layoutSidenav_content {
   position: relative;
   display: flex;
@@ -34,17 +44,21 @@ body {
   justify-content: space-between;
   min-width: 0;
   flex-grow: 1;
+  width: 100%;
   min-height: calc(100vh - 56px);
   margin-left: 0;
 }
 
+/* Quando menu abre em mobile: sidenav desliza para dentro */
 .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
   transform: translateX(0);
 }
+
+/* Overlay escuro atrás do menu aberto */
 .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
   content: "";
   display: block;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -55,31 +69,44 @@ body {
   transition: opacity 0.3s ease-in-out;
 }
 
+/* Desktop (≥992px): sidenav fica fixo ao lado, conteúdo recua */
 @media (min-width: 992px) {
   #layoutSidenav #layoutSidenav_nav {
+    position: relative;
+    flex-basis: 225px;
     transform: translateX(0);
+    height: auto;
   }
   #layoutSidenav #layoutSidenav_content {
     margin-left: 0;
+    width: calc(100% - 225px);
     transition: margin 0.15s ease-in-out;
   }
+  /* Colapso do sidenav em desktop */
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
     transform: translateX(-225px);
+    flex-basis: 0;
   }
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
-    margin-left: -225px;
+    width: 100%;
   }
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
     display: none;
   }
 }
+
+/* ── SB-NAV-FIXED ── */
 .sb-nav-fixed .sb-topnav {
   z-index: 1039;
 }
 .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 225px;
   height: 100vh;
   z-index: 1038;
+  transform: translateX(-225px);
 }
 .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
   padding-top: 56px;
@@ -87,17 +114,37 @@ body {
 .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav .sb-sidenav-menu {
   overflow-y: auto;
 }
+
+/* Mobile: sem padding-left */
 .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
   padding-left: 0;
   top: 56px;
+  margin-left: 0;
 }
 
+/* Sidenav aberto em mobile */
+.sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+  transform: translateX(0);
+}
+
+/* Desktop: sidenav fixo visível, conteúdo recua 225px */
 @media (min-width: 992px) {
+  .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
+    transform: translateX(0);
+  }
   .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
     padding-left: 225px;
   }
+  /* Colapso em desktop */
+  .sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+    transform: translateX(-225px);
+  }
+  .sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
+    padding-left: 0;
+  }
 }
 
+/* ── OUTROS LAYOUTS ── */
 #layoutError {
   display: flex;
   flex-direction: column;
@@ -120,14 +167,20 @@ body {
   margin-right: 0.5rem;
 }
 
+/* ── TOPNAV ── */
 .sb-topnav {
   padding-left: 0;
   height: 56px;
   z-index: 1039;
 }
 .sb-topnav .navbar-brand {
-  width: 225px;
+  width: auto;
   margin: 0;
+}
+@media (min-width: 992px) {
+  .sb-topnav .navbar-brand {
+    width: 225px;
+  }
 }
 .sb-topnav.navbar-dark #sidebarToggle {
   color: rgba(255, 255, 255, 0.5);
@@ -136,6 +189,7 @@ body {
   color: #212529;
 }
 
+/* ── SIDENAV ── */
 .sb-sidenav {
   display: flex;
   flex-direction: column;
@@ -170,11 +224,7 @@ body {
   margin-left: auto;
   transition: transform 0.15s ease;
 }
-.sb-sidenav
-  .sb-sidenav-menu
-  .nav
-  .nav-link.collapsed
-  .sb-sidenav-collapse-arrow {
+.sb-sidenav .sb-sidenav-menu .nav .nav-link.collapsed .sb-sidenav-collapse-arrow {
   transform: rotate(-90deg);
 }
 .sb-sidenav .sb-sidenav-menu .nav .sb-sidenav-menu-nested {
