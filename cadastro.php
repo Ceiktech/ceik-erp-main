@@ -15,8 +15,26 @@ if ($senha !== $confirma) {
     header('location: index.php?tela=cadastro&erro=senhas');
     exit;
 }
-if (strlen($senha) < 6) {
-    header('location: index.php?tela=cadastro&erro=curta');
+
+// Validação de senha forte: mínimo 8 caracteres, ao menos 1 maiúscula, 1 minúscula, 1 número e 1 especial
+if (strlen($senha) < 8) {
+    header('location: index.php?tela=cadastro&erro=senha_fraca');
+    exit;
+}
+if (!preg_match('/[A-Z]/', $senha)) {
+    header('location: index.php?tela=cadastro&erro=senha_fraca');
+    exit;
+}
+if (!preg_match('/[a-z]/', $senha)) {
+    header('location: index.php?tela=cadastro&erro=senha_fraca');
+    exit;
+}
+if (!preg_match('/[0-9]/', $senha)) {
+    header('location: index.php?tela=cadastro&erro=senha_fraca');
+    exit;
+}
+if (!preg_match('/[\W_]/', $senha)) {
+    header('location: index.php?tela=cadastro&erro=senha_fraca');
     exit;
 }
 
