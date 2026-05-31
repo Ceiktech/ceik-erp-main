@@ -18,7 +18,17 @@ session_start();
 include 'db.php';
 
 // ─── CONFIGURAÇÃO SMTP ────────────────────────────────────────────────────────
-include 'config.php';
+if (file_exists(__DIR__ . '/config.php')) {
+    include __DIR__ . '/config.php';
+} else {
+    define('SMTP_HOST', getenv('SMTP_HOST') ?: 'smtp.gmail.com');
+    define('SMTP_PORT', getenv('SMTP_PORT') ?: 587);
+    define('SMTP_USER', getenv('SMTP_USER') ?: '');
+    define('SMTP_PASS', getenv('SMTP_PASS') ?: '');
+    define('SMTP_FROM', getenv('SMTP_FROM') ?: '');
+    define('SMTP_NAME', getenv('SMTP_NAME') ?: 'Ceik ERP');
+    define('APP_URL',   getenv('APP_URL')   ?: 'https://ceik-erp-production.up.railway.app');
+}
 // ─────────────────────────────────────────────────────────────────────────────
 
 header('Content-Type: application/json');
