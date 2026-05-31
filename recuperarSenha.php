@@ -18,13 +18,7 @@ session_start();
 include 'db.php';
 
 // ─── CONFIGURAÇÃO SMTP ────────────────────────────────────────────────────────
-define('SMTP_HOST', 'smtp.gmail.com');          // smtp.gmail.com ou smtp.hostinger.com etc.
-define('SMTP_PORT', 587);                       // 587 para TLS | 465 para SSL
-define('SMTP_USER', 'seuemail@gmail.com');      // ← ALTERE: e-mail remetente
-define('SMTP_PASS', 'xxxx xxxx xxxx xxxx');     // ← ALTERE: Senha de App (Gmail) ou senha SMTP
-define('SMTP_FROM', 'seuemail@gmail.com');      // ← ALTERE: mesmo que SMTP_USER normalmente
-define('SMTP_NAME', 'Ceik Technology');
-define('APP_URL',   'https://seudominio.com');  // ← ALTERE: URL base do sistema (sem barra final)
+include 'config.php';
 // ─────────────────────────────────────────────────────────────────────────────
 
 header('Content-Type: application/json');
@@ -110,13 +104,13 @@ try {
 
     // Conteúdo
     $mail->isHTML(true);
-    $mail->Subject = 'Redefinição de senha – Ceik Technology';
+    $mail->Subject = 'Redefinição de senha – Ceik ERP';
     $mail->Body    = gerarCorpoEmail($nomeUsuario, $link);
     $mail->AltBody = "Olá $nomeUsuario,\n\n"
                    . "Clique no link abaixo para redefinir sua senha (válido por 1 hora):\n"
                    . "$link\n\n"
                    . "Se não solicitou, ignore este e-mail.\n\n"
-                   . "Ceik Technology";
+                   . "Ceik Tech";
 
     $mail->send();
 
@@ -134,7 +128,7 @@ function gerarCorpoEmail(string $nome, string $link): string
 {
     return "
     <div style='font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;'>
-      <div style='font-size:20px;font-weight:700;color:#1a56db;margin-bottom:4px;'>Ceik Technology</div>
+      <div style='font-size:20px;font-weight:700;color:#1a56db;margin-bottom:4px;'>Ceik Tech</div>
       <div style='font-size:12px;color:#6b7280;margin-bottom:24px;border-bottom:1px solid #e5e7eb;padding-bottom:16px;'>Gestão de Estoque</div>
       <p style='font-size:15px;color:#111;margin-bottom:8px;'>Olá, <strong>$nome</strong>.</p>
       <p style='font-size:14px;color:#374151;line-height:1.6;'>Recebemos uma solicitação para redefinir a senha da sua conta. Clique no botão abaixo para criar uma nova senha:</p>
