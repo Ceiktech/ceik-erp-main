@@ -1,24 +1,30 @@
 <?php
 /**
  * recuperarSenha.php
- * Gera token e envia e-mail de recuperação de senha.
+ * Gera token e envia e-mail de recuperação de senha via PHPMailer (SMTP).
  *
- * Dependência de envio: PHPMailer (recomendado) ou mail() nativo.
- * Configure as constantes SMTP abaixo com os dados do seu servidor de e-mail.
+ * ══════════════════════════════════════════════════════════════════
+ *  ANTES DE USAR:
+ *  1. Execute no terminal (dentro da pasta do projeto):
+ *       composer require phpmailer/phpmailer
+ *  2. Preencha as constantes SMTP abaixo com os dados reais.
+ *  3. No Gmail: ative verificação em 2 etapas e gere uma Senha de App em
+ *       https://myaccount.google.com/apppasswords
+ *     Use essa senha de app em SMTP_PASS (não a senha normal da conta).
+ * ══════════════════════════════════════════════════════════════════
  */
 
 session_start();
 include 'db.php';
 
 // ─── CONFIGURAÇÃO SMTP ────────────────────────────────────────────────────────
-// Altere estes valores com os dados reais da sua conta de e-mail.
-define('SMTP_HOST',   'smtp.gmail.com');       // ex: smtp.gmail.com, smtp.hostinger.com
-define('SMTP_PORT',   587);                    // 587 (TLS) ou 465 (SSL)
-define('SMTP_USER',   'seuemail@gmail.com');   // e-mail remetente
-define('SMTP_PASS',   'sua_senha_de_app');     // senha de app (Gmail) ou senha SMTP
-define('SMTP_FROM',   'seuemail@gmail.com');   // mesmo que SMTP_USER normalmente
-define('SMTP_NAME',   'Ceik Technology');
-define('APP_URL',     'https://seudominio.com'); // URL base do sistema (sem barra final)
+define('SMTP_HOST', 'smtp.gmail.com');          // smtp.gmail.com ou smtp.hostinger.com etc.
+define('SMTP_PORT', 587);                       // 587 para TLS | 465 para SSL
+define('SMTP_USER', 'seuemail@gmail.com');      // ← ALTERE: e-mail remetente
+define('SMTP_PASS', 'xxxx xxxx xxxx xxxx');     // ← ALTERE: Senha de App (Gmail) ou senha SMTP
+define('SMTP_FROM', 'seuemail@gmail.com');      // ← ALTERE: mesmo que SMTP_USER normalmente
+define('SMTP_NAME', 'Ceik Technology');
+define('APP_URL',   'https://seudominio.com');  // ← ALTERE: URL base do sistema (sem barra final)
 // ─────────────────────────────────────────────────────────────────────────────
 
 header('Content-Type: application/json');
@@ -31,8 +37,8 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 $emailSafe = mysqli_real_escape_string($conexao, $email);
-$res = mysqli_query($conexao, "SELECT id, nome FROM usuarios WHERE email = '$emailSafe'");
-$usuario = mysqli_fetch_assoc($res);
+$res       = mysqli_query($conexao, "SELECT id, nome FROM usuarios WHERE email = '$emailSafe'");
+$usuario   = mysqli_fetch_assoc($res);
 
 // Por segurança, sempre responde "ok" mesmo se o e-mail não existir
 // (evita enumeração de usuários)
@@ -44,11 +50,11 @@ if (!$usuario) {
 // Garante que a tabela de tokens existe
 mysqli_query($conexao, "
     CREATE TABLE IF NOT EXISTS `recuperacao_senha` (
-      `id` int(11) NOT NULL AUTO_INCREMENT,
-      `id_usuario` int(11) NOT NULL,
-      `token` varchar(64) NOT NULL,
-      `expira_em` datetime NOT NULL,
-      `usado` tinyint(1) DEFAULT 0,
+      `id`          int(11)      NOT NULL AUTO_INCREMENT,
+      `id_usuario`  int(11)      NOT NULL,
+      `token`       varchar(64)  NOT NULL,
+      `expira_em`   datetime     NOT NULL,
+      `usado`       tinyint(1)   DEFAULT 0,
       PRIMARY KEY (`id`),
       KEY `token` (`token`),
       KEY `id_usuario` (`id_usuario`)
@@ -60,68 +66,72 @@ $uid = intval($usuario['id']);
 mysqli_query($conexao, "DELETE FROM recuperacao_senha WHERE id_usuario = $uid");
 
 // Cria novo token (64 chars hexadecimais)
-$token   = bin2hex(random_bytes(32));
-$expira  = date('Y-m-d H:i:s', strtotime('+1 hour'));
+$token  = bin2hex(random_bytes(32));
+$expira = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
 mysqli_query($conexao,
     "INSERT INTO recuperacao_senha (id_usuario, token, expira_em)
      VALUES ($uid, '$token', '$expira')"
 );
 
-$link = APP_URL . '/redefinirSenha.php?token=' . $token;
+$link        = APP_URL . '/redefinirSenha.php?token=' . $token;
 $nomeUsuario = htmlspecialchars($usuario['nome']);
 
-// ─── Tenta enviar via PHPMailer se disponível ─────────────────────────────────
-$enviado = false;
-
-if (file_exists(__DIR__ . '/vendor/autoload.php')) {
-    require __DIR__ . '/vendor/autoload.php';
-    use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\SMTP;
-
-    $mail = new PHPMailer(true);
-    try {
-        $mail->isSMTP();
-        $mail->Host       = SMTP_HOST;
-        $mail->SMTPAuth   = true;
-        $mail->Username   = SMTP_USER;
-        $mail->Password   = SMTP_PASS;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = SMTP_PORT;
-        $mail->CharSet    = 'UTF-8';
-
-        $mail->setFrom(SMTP_FROM, SMTP_NAME);
-        $mail->addAddress($email, $nomeUsuario);
-        $mail->isHTML(true);
-        $mail->Subject = 'Redefinição de senha – Ceik Technology';
-        $mail->Body    = gerarCorpoEmail($nomeUsuario, $link);
-        $mail->AltBody = "Olá $nomeUsuario,\n\nClique no link abaixo para redefinir sua senha (válido por 1 hora):\n$link\n\nSe não solicitou, ignore este e-mail.\n\nCeik Technology";
-
-        $mail->send();
-        $enviado = true;
-    } catch (Exception $e) {
-        // PHPMailer falhou – tenta mail() nativo como fallback
-    }
+// ─── Verifica se o PHPMailer foi instalado via Composer ───────────────────────
+if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
+    // PHPMailer não instalado — registra erro e retorna falha
+    error_log('[Ceik] PHPMailer não encontrado. Execute: composer require phpmailer/phpmailer');
+    echo json_encode(['ok' => false, 'msg' => 'Erro interno ao enviar e-mail. Contate o suporte.']);
+    exit;
 }
 
-// Fallback: mail() nativo
-if (!$enviado) {
-    $assunto = '=?UTF-8?B?' . base64_encode('Redefinição de senha – Ceik Technology') . '?=';
-    $corpo = "Olá $nomeUsuario,\r\n\r\n"
-           . "Recebemos uma solicitação para redefinir a senha da sua conta.\r\n\r\n"
-           . "Clique no link abaixo para criar uma nova senha (válido por 1 hora):\r\n"
-           . $link . "\r\n\r\n"
-           . "Se você não solicitou a redefinição, ignore este e-mail — sua senha permanece a mesma.\r\n\r\n"
-           . "Ceik Technology";
-    $headers = "From: " . SMTP_NAME . " <" . SMTP_FROM . ">\r\n"
-             . "Reply-To: " . SMTP_FROM . "\r\n"
-             . "Content-Type: text/plain; charset=UTF-8\r\n";
-    mail($email, $assunto, $corpo, $headers);
+require __DIR__ . '/vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+$mail = new PHPMailer(true);
+
+try {
+    // Configurações do servidor SMTP
+    $mail->isSMTP();
+    $mail->Host       = SMTP_HOST;
+    $mail->SMTPAuth   = true;
+    $mail->Username   = SMTP_USER;
+    $mail->Password   = SMTP_PASS;
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port       = SMTP_PORT;
+    $mail->CharSet    = 'UTF-8';
+
+    // Remetente e destinatário
+    $mail->setFrom(SMTP_FROM, SMTP_NAME);
+    $mail->addAddress($email, $nomeUsuario);
+
+    // Conteúdo
+    $mail->isHTML(true);
+    $mail->Subject = 'Redefinição de senha – Ceik Technology';
+    $mail->Body    = gerarCorpoEmail($nomeUsuario, $link);
+    $mail->AltBody = "Olá $nomeUsuario,\n\n"
+                   . "Clique no link abaixo para redefinir sua senha (válido por 1 hora):\n"
+                   . "$link\n\n"
+                   . "Se não solicitou, ignore este e-mail.\n\n"
+                   . "Ceik Technology";
+
+    $mail->send();
+
+    echo json_encode(['ok' => true]);
+
+} catch (Exception $e) {
+    // Registra o erro real no log do servidor (não expõe ao usuário)
+    error_log('[Ceik] Falha ao enviar e-mail de recuperação: ' . $mail->ErrorInfo);
+    echo json_encode(['ok' => false, 'msg' => 'Não foi possível enviar o e-mail. Tente novamente mais tarde.']);
 }
 
-echo json_encode(['ok' => true]);
+// ─────────────────────────────────────────────────────────────────────────────
 
-function gerarCorpoEmail($nome, $link) {
+function gerarCorpoEmail(string $nome, string $link): string
+{
     return "
     <div style='font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;'>
       <div style='font-size:20px;font-weight:700;color:#1a56db;margin-bottom:4px;'>Ceik Technology</div>
