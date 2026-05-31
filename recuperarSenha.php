@@ -1,34 +1,27 @@
 <?php
 /**
  * recuperarSenha.php
- * Gera token e envia e-mail de recuperação de senha via PHPMailer (SMTP).
+ * Gera token e envia e-mail de recuperação de senha via Resend API.
  *
  * ══════════════════════════════════════════════════════════════════
- *  ANTES DE USAR:
- *  1. Execute no terminal (dentro da pasta do projeto):
- *       composer require phpmailer/phpmailer
- *  2. Preencha as constantes SMTP abaixo com os dados reais.
- *  3. No Gmail: ative verificação em 2 etapas e gere uma Senha de App em
- *       https://myaccount.google.com/apppasswords
- *     Use essa senha de app em SMTP_PASS (não a senha normal da conta).
+ *  CONFIGURAÇÃO:
+ *  1. Crie uma conta gratuita em https://resend.com
+ *  2. Gere uma API Key no painel do Resend
+ *  3. Adicione a variável RESEND_API_KEY no Railway (Variables)
+ *     ou no config.php local
  * ══════════════════════════════════════════════════════════════════
  */
 
 session_start();
 include 'db.php';
 
-// ─── CONFIGURAÇÃO SMTP ────────────────────────────────────────────────────────
+// ─── CONFIGURAÇÃO ─────────────────────────────────────────────────────────────
 if (file_exists(__DIR__ . '/config.php')) {
     include __DIR__ . '/config.php';
 } else {
-    define('SMTP_HOST', getenv('SMTP_HOST') ?: 'smtp.gmail.com');
-    define('SMTP_PORT', getenv('SMTP_PORT') ?: 587);
-    define('SMTP_USER', getenv('SMTP_USER') ?: '');
-    define('SMTP_PASS', getenv('SMTP_PASS') ?: '');
-    define('SMTP_FROM', getenv('SMTP_FROM') ?: '');
-    define('SMTP_NAME', getenv('SMTP_NAME') ?: 'Ceik ERP');
-    define('APP_URL',   getenv('APP_URL')   ?: 'https://ceik-erp-production.up.railway.app');
+    define('APP_URL', getenv('APP_URL') ?: 'https://ceik-erp-production.up.railway.app');
 }
+$resendApiKey = getenv('RESEND_API_KEY') ?: (defined('RESEND_API_KEY') ? RESEND_API_KEY : '');
 // ─────────────────────────────────────────────────────────────────────────────
 
 header('Content-Type: application/json');
@@ -81,64 +74,47 @@ mysqli_query($conexao,
 $link        = APP_URL . '/redefinirSenha.php?token=' . $token;
 $nomeUsuario = htmlspecialchars($usuario['nome']);
 
-// ─── Verifica se o PHPMailer foi instalado via Composer ───────────────────────
-if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
-    // PHPMailer não instalado — registra erro e retorna falha
-    error_log('[Ceik] PHPMailer não encontrado. Execute: composer require phpmailer/phpmailer');
+// ─── Envia e-mail via Resend API ──────────────────────────────────────────────
+if (empty($resendApiKey)) {
+    error_log('[Ceik] RESEND_API_KEY não configurada.');
     echo json_encode(['ok' => false, 'msg' => 'Erro interno ao enviar e-mail. Contate o suporte.']);
     exit;
 }
 
-require __DIR__ . '/vendor/autoload.php';
+$payload = json_encode([
+    'from'    => 'Ceik ERP <onboarding@resend.dev>',
+    'to'      => [$email],
+    'subject' => 'Redefinição de senha – Ceik ERP',
+    'html'    => gerarCorpoEmail($nomeUsuario, $link),
+    'text'    => "Olá $nomeUsuario,\n\nClique no link abaixo para redefinir sua senha (válido por 1 hora):\n$link\n\nSe não solicitou, ignore este e-mail.\n\nCeik ERP",
+]);
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+$context = stream_context_create([
+    'http' => [
+        'method'        => 'POST',
+        'header'        => "Authorization: Bearer $resendApiKey\r\nContent-Type: application/json\r\n",
+        'content'       => $payload,
+        'ignore_errors' => true,
+    ]
+]);
 
-$mail = new PHPMailer(true);
+$response   = file_get_contents('https://api.resend.com/emails', false, $context);
+$httpStatus = $http_response_header[0] ?? '';
 
-try {
-    // Configurações do servidor SMTP
-    $mail->isSMTP();
-    $mail->Host       = SMTP_HOST;
-    $mail->SMTPAuth   = true;
-    $mail->Username   = SMTP_USER;
-    $mail->Password   = SMTP_PASS;
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-    $mail->Port       = SMTP_PORT;
-    $mail->CharSet    = 'UTF-8';
-
-    // Remetente e destinatário
-    $mail->setFrom(SMTP_FROM, SMTP_NAME);
-    $mail->addAddress($email, $nomeUsuario);
-
-    // Conteúdo
-    $mail->isHTML(true);
-    $mail->Subject = 'Redefinição de senha – Ceik ERP';
-    $mail->Body    = gerarCorpoEmail($nomeUsuario, $link);
-    $mail->AltBody = "Olá $nomeUsuario,\n\n"
-                   . "Clique no link abaixo para redefinir sua senha (válido por 1 hora):\n"
-                   . "$link\n\n"
-                   . "Se não solicitou, ignore este e-mail.\n\n"
-                   . "Ceik Tech";
-
-    $mail->send();
-
-    echo json_encode(['ok' => true]);
-
-} catch (Exception $e) {
-    // Registra o erro real no log do servidor (não expõe ao usuário)
-    error_log('[Ceik] Falha ao enviar e-mail de recuperação: ' . $mail->ErrorInfo);
+if ($response === false || strpos($httpStatus, '200') === false) {
+    error_log('[Ceik] Falha ao enviar via Resend: ' . $response);
     echo json_encode(['ok' => false, 'msg' => 'Não foi possível enviar o e-mail. Tente novamente mais tarde.']);
+    exit;
 }
 
+echo json_encode(['ok' => true]);
 // ─────────────────────────────────────────────────────────────────────────────
 
 function gerarCorpoEmail(string $nome, string $link): string
 {
     return "
     <div style='font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;'>
-      <div style='font-size:20px;font-weight:700;color:#1a56db;margin-bottom:4px;'>Ceik Tech</div>
+      <div style='font-size:20px;font-weight:700;color:#1a56db;margin-bottom:4px;'>Ceik ERP</div>
       <div style='font-size:12px;color:#6b7280;margin-bottom:24px;border-bottom:1px solid #e5e7eb;padding-bottom:16px;'>Gestão de Estoque</div>
       <p style='font-size:15px;color:#111;margin-bottom:8px;'>Olá, <strong>$nome</strong>.</p>
       <p style='font-size:14px;color:#374151;line-height:1.6;'>Recebemos uma solicitação para redefinir a senha da sua conta. Clique no botão abaixo para criar uma nova senha:</p>
