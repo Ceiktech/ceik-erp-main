@@ -27,7 +27,8 @@
           <select class="form-select" id="filtro-produto">
             <option value="">Todos os produtos</option>
             <?php
-              $prods = mysqli_query($conexao, "SELECT id, nome FROM produtos ORDER BY nome");
+              $uid_rel = intval($_SESSION['id'] ?? 0);
+              $prods = mysqli_query($conexao, "SELECT id, nome FROM produtos WHERE id_usuario = $uid_rel ORDER BY nome");
               while($p = mysqli_fetch_assoc($prods)):
             ?>
             <option value="<?php echo $p['id']; ?>"><?php echo htmlspecialchars($p['nome']); ?></option>
