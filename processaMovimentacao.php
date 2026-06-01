@@ -35,9 +35,10 @@ if ($tipo === 'saida') {
 }
 
 // 1. Salva a movimentação
+$dataCompleta = $data . ' ' . date('H:i:s');
 mysqli_query($conexao,
     "INSERT INTO movimentacoes (id_produto, tipo, quantidade, data, observacao)
-     VALUES ($id_produto, '$tipo', $quantidade, '$data', '$observacao')"
+     VALUES ($id_produto, '$tipo', $quantidade, '$dataCompleta', '$observacao')"
 );
 
 // 2. Atualiza produtos.quantidade (tabela principal que a view usa)
