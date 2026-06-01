@@ -58,6 +58,16 @@ if ($result) {
          ON DUPLICATE KEY UPDATE quantidade = $quantidade, atualizado_em = NOW()"
     );
 
+    // Se quantidade inicial > 0, registra automaticamente como movimentação de entrada
+    if ($quantidade > 0) {
+        $dataHoje = date('Y-m-d H:i:s');
+        $obsEntrada = mysqli_real_escape_string($conexao, 'Estoque inicial');
+        mysqli_query($conexao,
+            "INSERT INTO movimentacoes (id_produto, tipo, quantidade, data, observacao)
+             VALUES ($id_produto, 'entrada', $quantidade, '$dataHoje', '$obsEntrada')"
+        );
+    }
+
     header('location: index.php?pagina=produtos&cadastroOk=1');
 } else {
     header('location: index.php?pagina=novoProduto&erro=db');
