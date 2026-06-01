@@ -18,7 +18,7 @@ $produto = $_GET['produto'] ?? '';
 // Filtra pelo usuário logado (admin vê tudo)
 $whereUser = $isAdm ? '' : "AND p.id_usuario = $uid";
 
-$where = "WHERE m.data BETWEEN '$de 00:00:00' AND '$ate 23:59:59' $whereUser";
+$where = "WHERE DATE(m.data) BETWEEN '$de' AND '$ate' $whereUser";
 if ($produto) $where .= " AND m.id_produto = " . intval($produto);
 
 $movs = mysqli_query($conexao,

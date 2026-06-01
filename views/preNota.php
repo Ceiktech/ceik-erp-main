@@ -82,7 +82,10 @@
     <select class="form-select form-select-sm item-produto" style="flex:2;" onchange="atualizarPreco(this)">
       <option value="" disabled selected>Produto</option>
       <?php
-        $prods = mysqli_query($conexao, "SELECT id, nome, preco FROM produtos ORDER BY nome");
+        $uid_pn = intval($_SESSION['id'] ?? 0);
+        $isAdm_pn = ($_SESSION['tipo'] ?? '') === 'admin';
+        $filtro_pn = $isAdm_pn ? '' : "WHERE id_usuario = $uid_pn";
+        $prods = mysqli_query($conexao, "SELECT id, nome, preco FROM produtos $filtro_pn ORDER BY nome");
         while($p = mysqli_fetch_assoc($prods)):
       ?>
       <option value="<?php echo $p['id']; ?>" data-preco="<?php echo $p['preco']; ?>" data-nome="<?php echo htmlspecialchars($p['nome']); ?>">
@@ -99,7 +102,10 @@
 <script>
 const produtos = {};
 <?php
-  $prods2 = mysqli_query($conexao, "SELECT id, nome, preco FROM produtos ORDER BY nome");
+  $uid_pn2 = intval($_SESSION['id'] ?? 0);
+  $isAdm_pn2 = ($_SESSION['tipo'] ?? '') === 'admin';
+  $filtro_pn2 = $isAdm_pn2 ? '' : "WHERE id_usuario = $uid_pn2";
+  $prods2 = mysqli_query($conexao, "SELECT id, nome, preco FROM produtos $filtro_pn2 ORDER BY nome");
   while($p = mysqli_fetch_assoc($prods2)):
 ?>
 produtos[<?php echo $p['id']; ?>] = { nome: "<?php echo addslashes($p['nome']); ?>", preco: <?php echo $p['preco']; ?> };
