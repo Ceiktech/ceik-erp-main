@@ -30,35 +30,19 @@ $data_venc     = !empty($_POST['data_vencimento'])
                  ? "'" . mysqli_real_escape_string($conexao, $_POST['data_vencimento']) . "'"
                  : "NULL";
 
-// Upload de foto
+// Upload de foto (salvo como base64 no banco)
 $queryFoto = '';
-if (!empty($_FILES['foto']['name'])) {
-
-    $pasta = __DIR__ . '/arquivos/';
-
-    // Cria a pasta se não existir
-    if (!is_dir($pasta)) {
-        mkdir($pasta, 0755, true);
-    }
-
+if (!empty($_FILES['foto']['name']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
     $extensao = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
     $extensoesPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    $mimeTypes = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'gif' => 'image/gif', 'webp' => 'image/webp'];
 
-    if (in_array($extensao, $extensoesPermitidas) && $_FILES['foto']['size'] <= 5242880) {
-        $nomeArquivo = uniqid('prod_') . '.' . $extensao;
-        $destino     = $pasta . $nomeArquivo;
-
-        if (move_uploaded_file($_FILES['foto']['tmp_name'], $destino)) {
-            $caminhoFoto = mysqli_real_escape_string($conexao, 'arquivos/' . $nomeArquivo);
-            $queryFoto   = ", foto='$caminhoFoto'";
-
-            // Remove foto antiga do servidor
-            $fotoRes = mysqli_query($conexao, "SELECT foto FROM produtos WHERE id = $id");
-            $fotoAntiga = mysqli_fetch_assoc($fotoRes);
-            if (!empty($fotoAntiga['foto']) && file_exists(__DIR__ . '/' . $fotoAntiga['foto'])) {
-                unlink(__DIR__ . '/' . $fotoAntiga['foto']);
-            }
-        }
+    if (in_array($extensao, $extensoesPermitidas) && $_FILES['foto']['size'] <= 2097152) { // max 2MB
+        $conteudo    = file_get_contents($_FILES['foto']['tmp_name']);
+        $mime        = $mimeTypes[$extensao] ?? 'image/jpeg';
+        $base64      = 'data:' . $mime . ';base64,' . base64_encode($conteudo);
+        $caminhoFoto = mysqli_real_escape_string($conexao, $base64);
+        $queryFoto   = ", foto='$caminhoFoto'";
     }
 }
 
