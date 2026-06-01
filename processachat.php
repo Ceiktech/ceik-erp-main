@@ -73,12 +73,14 @@ if (!isset($_POST['pergunta']) || trim($_POST['pergunta']) === '') {
 // Usuário logado
 $usuarioLogado = $_SESSION['nome'] ?? 'Usuário';
 
-// Busca produtos usando MySQLi ($conexao)
+// Busca produtos apenas do usuario logado
 $produtosTexto = "Nenhum produto cadastrado.";
+$idUsuario = intval($_SESSION['id'] ?? 0);
 
 $result = mysqli_query($conexao,
     "SELECT nome, quantidade, qtd_minima, preco, data_vencimento
      FROM produtos
+     WHERE id_usuario = $idUsuario
      ORDER BY nome
      LIMIT 20"
 );
