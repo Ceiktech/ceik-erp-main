@@ -7,7 +7,7 @@ if (!isset($_SESSION['login'])) {
     exit;
 }
 
-$id_usuario    = intval($_SESSION['id']); // usa o usuário logado, não hardcoded 1
+$id_usuario    = intval($_SESSION['id']);
 $nome          = mysqli_real_escape_string($conexao, trim($_POST['nome'] ?? ''));
 $codigo_barras = mysqli_real_escape_string($conexao, trim($_POST['codigo_barras'] ?? ''));
 $categoria     = mysqli_real_escape_string($conexao, trim($_POST['categoria'] ?? ''));
@@ -23,7 +23,7 @@ if (!empty($_FILES['foto']['name']) && $_FILES['foto']['error'] === UPLOAD_ERR_O
     $extensoesPermitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
     $mimeTypes = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'gif' => 'image/gif', 'webp' => 'image/webp'];
 
-    if (in_array($extensao, $extensoesPermitidas) && $_FILES['foto']['size'] <= 2097152) { // max 2MB
+    if (in_array($extensao, $extensoesPermitidas) && $_FILES['foto']['size'] <= 2097152) {
         $conteudo = file_get_contents($_FILES['foto']['tmp_name']);
         $mime     = $mimeTypes[$extensao] ?? 'image/jpeg';
         $foto     = 'data:' . $mime . ';base64,' . base64_encode($conteudo);
@@ -48,6 +48,16 @@ if ($result) {
          VALUES ($id_produto, $quantidade, NOW())
          ON DUPLICATE KEY UPDATE quantidade = $quantidade, atualizado_em = NOW()"
     );
+
+    // Se quantidade inicial > 0, registra automaticamente movimentação de entrada
+    if ($quantidade > 0) {
+        $dataHoje   = date('Y-m-d H:i:s');
+        $obsEntrada = mysqli_real_escape_string($conexao, 'Estoque inicial');
+        mysqli_query($conexao,
+            "INSERT INTO movimentacoes (id_produto, tipo, quantidade, data, observacao)
+             VALUES ($id_produto, 'entrada', $quantidade, '$dataHoje', '$obsEntrada')"
+        );
+    }
 
     header('location: index.php?pagina=produtos&cadastroOk=1');
 } else {
