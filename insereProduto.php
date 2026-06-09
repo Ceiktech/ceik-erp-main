@@ -13,7 +13,7 @@ $codigo_barras = mysqli_real_escape_string($conexao, trim($_POST['codigo_barras'
 $categoria     = mysqli_real_escape_string($conexao, trim($_POST['categoria'] ?? ''));
 $preco         = floatval(str_replace(',', '.', $_POST['preco'] ?? '0'));
 $quantidade    = intval($_POST['quantidade'] ?? 0);
-$qtd_minima    = intval($_POST['qtd_minima'] ?? 0);
+$qtd_minima    = ($_POST['qtd_minima'] ?? '') !== '' ? intval($_POST['qtd_minima']) : null;
 $data_venc     = !empty($_POST['data_vencimento']) ? "'" . mysqli_real_escape_string($conexao, $_POST['data_vencimento']) . "'" : "NULL";
 
 // Upload de foto (salvo como base64 no banco)
@@ -35,7 +35,7 @@ $fotoSafe = mysqli_real_escape_string($conexao, $foto);
 $query = "INSERT INTO produtos
           (id_usuario, nome, codigo_barras, categoria, preco, qtd_minima, data_vencimento, quantidade, foto)
           VALUES
-          ($id_usuario, '$nome', '$codigo_barras', '$categoria', $preco, $qtd_minima, $data_venc, $quantidade, '$fotoSafe')";
+          ($id_usuario, '$nome', '$codigo_barras', '$categoria', $preco, " . ($qtd_minima !== null ? $qtd_minima : 'NULL') . ", $data_venc, $quantidade, '$fotoSafe')";
 
 $result = mysqli_query($conexao, $query);
 
