@@ -11,23 +11,15 @@ $totalProdutos = mysqli_fetch_assoc(mysqli_query($conexao,
 
 $estoqueBaixo = mysqli_fetch_assoc(mysqli_query($conexao,
   "SELECT COUNT(*) as total FROM produtos
-   WHERE qtd_minima IS NOT NULL AND quantidade <= qtd_minima " . ($isAdm ? '' : "AND id_usuario = $uid")));
+   WHERE ((qtd_minima IS NOT NULL AND quantidade <= qtd_minima)
+      OR (data_vencimento IS NOT NULL AND data_vencimento <= CURDATE()))
+   " . ($isAdm ? '' : "AND id_usuario = $uid")));
 
 $vencendo = mysqli_fetch_assoc(mysqli_query($conexao,
   "SELECT COUNT(*) as total FROM produtos
    WHERE data_vencimento <= DATE_ADD(CURDATE(), INTERVAL 30 DAY)
    AND data_vencimento IS NOT NULL " . ($isAdm ? '' : "AND id_usuario = $uid")));
-// DEBUG TEMPORÁRIO - remover depois
-echo "<pre>";
-echo "UID: " . $uid . "\n";
-echo "isAdm: " . ($isAdm ? 'sim' : 'não') . "\n";
-echo "Itens críticos: " . $estoqueBaixo['total'] . "\n";
 
-$debug = mysqli_query($conexao, "SELECT id, nome, quantidade, qtd_minima FROM produtos WHERE id_usuario = $uid");
-while($r = mysqli_fetch_assoc($debug)) {
-    echo "Produto: {$r['nome']} | qtd: {$r['quantidade']} | min: {$r['qtd_minima']}\n";
-}
-echo "</pre>";
 $alertasRecentes = mysqli_query($conexao,
   "SELECT nome, quantidade, qtd_minima, data_vencimento
    FROM produtos
