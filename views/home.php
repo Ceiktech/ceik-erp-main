@@ -11,7 +11,7 @@ $totalProdutos = mysqli_fetch_assoc(mysqli_query($conexao,
 
 $estoqueBaixo = mysqli_fetch_assoc(mysqli_query($conexao,
   "SELECT COUNT(*) as total FROM produtos
-   WHERE quantidade <= qtd_minima " . ($isAdm ? '' : "AND id_usuario = $uid")));
+   WHERE qtd_minima IS NOT NULL AND quantidade <= qtd_minima " . ($isAdm ? '' : "AND id_usuario = $uid")));
 
 $vencendo = mysqli_fetch_assoc(mysqli_query($conexao,
   "SELECT COUNT(*) as total FROM produtos
@@ -21,7 +21,7 @@ $vencendo = mysqli_fetch_assoc(mysqli_query($conexao,
 $alertasRecentes = mysqli_query($conexao,
   "SELECT nome, quantidade, qtd_minima, data_vencimento
    FROM produtos
-   WHERE (quantidade <= qtd_minima
+   WHERE ((qtd_minima IS NOT NULL AND quantidade <= qtd_minima)
       OR (data_vencimento <= DATE_ADD(CURDATE(), INTERVAL 30 DAY) AND data_vencimento IS NOT NULL))
    " . ($isAdm ? '' : "AND id_usuario = $uid") . "
    ORDER BY data_vencimento ASC LIMIT 5");
